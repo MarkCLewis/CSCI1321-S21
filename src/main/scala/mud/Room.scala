@@ -2,7 +2,7 @@ package mud
 
 import scala.io.Source
 
-class Room(name: String, desc: String, private val exits: Array[Int], private var items: List[Item]) {
+class Room(val name: String, val desc: String, private val exits: Array[Int], private var items: List[Item]) {
   def fullDescription(): String = ???
 
   def getExit(dir: Int): Option[Room] = ???
@@ -24,5 +24,19 @@ class Room(name: String, desc: String, private val exits: Array[Int], private va
 object Room {
   val rooms = readRooms()
 
-  def readRooms(): Array[Room] = ???
+  def readRooms(): Array[Room] = {
+    val source = Source.fromFile("map.txt")
+    val lines = source.getLines()
+    val ret = Array.fill(lines.next().toInt)(readRoom(lines))
+    source.close()
+    ret
+  }
+
+  def readRoom(lines: Iterator[String]): Room = {
+    val name = lines.next()
+    val desc = lines.next()
+    val exits = lines.next().split(",").map(_.toInt)
+    val items = List.fill(lines.next().toInt)(Item(lines.next(), lines.next()))
+    new Room(name, desc, exits, items)
+  }
 }

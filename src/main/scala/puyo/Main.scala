@@ -5,6 +5,8 @@ import scalafx.application.JFXApp
 import scalafx.scene.Scene
 import scalafx.scene.canvas.Canvas
 import scalafx.animation.AnimationTimer
+import scalafx.scene.input.KeyEvent
+import scalafx.scene.input.KeyCode
 
 // * Open Window
 // * Make the window the right size
@@ -15,8 +17,8 @@ import scalafx.animation.AnimationTimer
 // * Include the falling puyos
 // * Don't draw Puyo above the top
 // * Falls pieces
-// Walls
 // Moving
+// Walls
 // Rotating
 
 object Main extends JFXApp {
@@ -40,6 +42,21 @@ object Main extends JFXApp {
         lastTime = time
       }
       timer.start()
+
+      onKeyPressed = (ke: KeyEvent) => {
+        ke.code match {
+          case KeyCode.Left => board.leftPressed()
+          case KeyCode.Right => board.rightPressed()
+          case _ =>
+        }
+      }
+      onKeyReleased = (ke: KeyEvent) => {
+        ke.code match {
+          case KeyCode.Left => board.leftReleased()
+          case KeyCode.Right => board.rightReleased()
+          case _ =>
+        }
+      }
     }
   }
 }

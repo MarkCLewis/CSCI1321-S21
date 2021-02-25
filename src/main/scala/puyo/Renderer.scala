@@ -4,7 +4,7 @@ import scalafx.scene.canvas.GraphicsContext
 import scalafx.scene.paint.Color
 
 class Renderer(gc: GraphicsContext) {
-  val cellSize = 20
+  val cellSize = 40
   def render(board: Board): Unit = {
     gc.fill = Color.Black
     gc.fillRect(50, 50, cellSize * board.width, cellSize * board.height)

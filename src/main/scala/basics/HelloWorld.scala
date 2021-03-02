@@ -11,6 +11,9 @@ object HelloWorld {
     val name = readLine().trim()
 		println(s"Hello $name!")
 		println("Let's put this in GitHub.")
+
+		for (i <- (1 to 1000).par) yield i*i
+		(1 to 1000).par.map(i => i*i)
 	}
 	
 	def square(x: Double) = x*x

@@ -20,13 +20,21 @@ class Julia(c: Complex) extends Stage {
 
   def fillImage(image: WritableImage, rmin: Double, rmax: Double, imin: Double, imax: Double): Unit = {
     val writer = image.pixelWriter
-    for (x <- 0 until image.width().toInt; y <- 0 until image.height().toInt) {
-      val c = Complex(rmin + x * (rmax-rmin) / image.width(), imin + y * (imax-imin) / image.height())
-      val cnt = juliaCount(c)
-      val color = countToColor(cnt)
-      writer.setColor(x, y, color)
+    val futures = for (x <- 0 until image.width().toInt) yield Future {
+      for(y <- 0 until image.height().toInt) yield {
+        val c = Complex(rmin + x * (rmax-rmin) / image.width(), imin + y * (imax-imin) / image.height())
+        val cnt = juliaCount(c)
+        (x, y, countToColor(cnt))
+      }
+    }
+    for (f <- futures) {
+      for (col <- f; (x, y, color) <- col) {
+        writer.setColor(x, y, color)
+      }
     }
   }
+
+  // def players = entities.collect { case p: Player => p }
 
   def countToColor(cnt: Int): Color = {
     if (cnt < Mandelbrot.maxCount) Color(math.log(cnt)/Mandelbrot.logMax, 0.0, 1.0 - math.log(cnt)/Mandelbrot.logMax, 1.0) else Color.Black

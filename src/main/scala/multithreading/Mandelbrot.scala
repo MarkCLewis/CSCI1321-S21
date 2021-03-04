@@ -37,7 +37,7 @@ object Mandelbrot extends JFXApp {
 
   def fillImage(image: WritableImage): Unit = {
     val writer = image.pixelWriter
-    for (x <- 0 until image.width().toInt; y <- 0 until image.height().toInt) {
+    for (x <- (0 until image.width().toInt).par; y <- 0 until image.height().toInt) {
       val c = Complex(rmin + x * (rmax-rmin) / image.width(), imin + y * (imax-imin) / image.height())
       val cnt = mandelCount(c)
       val color = countToColor(cnt)

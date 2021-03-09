@@ -7,6 +7,7 @@ import scalafx.scene.image.ImageView
 import scalafx.scene.paint.Color
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
+import scalafx.application.Platform
 
 class Julia(c: Complex) extends Stage {
   title = "Julia: " + c
@@ -14,11 +15,11 @@ class Julia(c: Complex) extends Stage {
     val image = new WritableImage(Mandelbrot.imageSize, Mandelbrot.imageSize)
     content = new ImageView(image)
     val start = System.nanoTime()
-    fillImage(image, -1.0, 1.0, -1.0, 1.0)
-    println((System.nanoTime() - start)*1e-9)
+    val f = fillImage(image, -1.0, 1.0, -1.0, 1.0)
+    f.foreach(_ => println((System.nanoTime() - start)*1e-9))
   }
 
-  def fillImage(image: WritableImage, rmin: Double, rmax: Double, imin: Double, imax: Double): Unit = {
+  def fillImage(image: WritableImage, rmin: Double, rmax: Double, imin: Double, imax: Double): Future[Unit] = {
     val writer = image.pixelWriter
     val futures = for (x <- 0 until image.width().toInt) yield Future {
       for(y <- 0 until image.height().toInt) yield {
@@ -27,10 +28,12 @@ class Julia(c: Complex) extends Stage {
         (x, y, countToColor(cnt))
       }
     }
-    for (f <- futures) {
-      for (col <- f; (x, y, color) <- col) {
-        writer.setColor(x, y, color)
-      }
+    for (data <- Future.sequence(futures)) yield {
+      Platform.runLater(
+        for (col <- data; (x, y, color) <- col) {
+          writer.setColor(x, y, color)
+        }
+      )
     }
   }
 

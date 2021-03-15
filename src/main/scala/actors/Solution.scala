@@ -28,7 +28,7 @@ class Solution(image: WritableImage) extends Actor {
     // println(s"Check $x $y")
       if (x < 0 || x >= image.width()) sender ! Speck.MoveTo(ox, oy)
       else if (reader.getColor(x, y) == Color.White) {
-        println(s"Set at $ox, $oy")
+        // println(s"Set at $ox, $oy")
         Platform.runLater(writer.setColor(ox, oy, Color.White))
         sender ! Speck.MoveTo(util.Random.nextInt(image.width().toInt), 0)
       } else sender ! Speck.MoveTo(x, y)

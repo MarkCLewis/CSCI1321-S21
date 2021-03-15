@@ -21,6 +21,7 @@ object CrystalGrowth extends JFXApp {
       content = view
 
       solution ! Solution.Start
+      onCloseRequest = e => system.terminate()
     }
   }
 }

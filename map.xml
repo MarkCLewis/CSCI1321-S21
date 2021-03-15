@@ -1,0 +1,16 @@
+<rooms>
+  <room keyword="CSI257" name="CSI 257">
+    <description>A room filled with the glow of computers and the scent of dispair.</description>
+    <exits>-1,Hallway,-1,-1,-1,-1</exits>
+    <item name="Chair">Something that you sit on.</item>
+    <item name="Computer">The most powerful device in the Universe!</item>
+  </room>
+  <room keyword="Hallway" name="Hallway">
+    <description>A long room that connects other rooms.</description>
+    <exits>CSI257,-1,Broadway,-1,-1,-1</exits>
+  </room>
+  <room keyword="Broadway" name="Broadway">
+    <description>A really big hall.</description>
+    <exits>-1,-1,-1,Hallway,-1,-1</exits>
+  </room>
+</rooms>

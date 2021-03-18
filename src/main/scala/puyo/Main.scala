@@ -17,9 +17,12 @@ import scalafx.scene.input.KeyCode
 // * Include the falling puyos
 // * Don't draw Puyo above the top
 // * Falls pieces
-// Moving
+// * Moving
+// Moving and falling at the right speed
 // Walls
 // Rotating
+// Stack
+// Things go away
 
 object Main extends JFXApp {
   val canvas = new Canvas(1000, 800)

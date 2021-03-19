@@ -26,3 +26,8 @@ libraryDependencies ++= Seq(
 libraryDependencies ++= javaFXModules.map( m =>
   "org.openjfx" % s"javafx-$m" % "11" classifier osName
 )
+
+assemblyMergeStrategy in assembly := {
+ case PathList("META-INF", xs @ _*) => MergeStrategy.discard
+ case x => MergeStrategy.first
+}

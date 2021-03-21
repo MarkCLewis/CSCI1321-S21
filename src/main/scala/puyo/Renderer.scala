@@ -10,15 +10,21 @@ class Renderer(gc: GraphicsContext) {
     gc.fillRect(50, 50, cellSize * board.width, cellSize * board.height)
 
     for (yo <- board.allYos; if yo.y >= 0) {
-      yo.color match {
-        case PuyoColor.Red => gc.fill = Color.Red
-        case PuyoColor.Green => gc.fill = Color.Green
-        case PuyoColor.Blue => gc.fill = Color.Blue
-        case PuyoColor.Purple => gc.fill = Color.Purple
-        case PuyoColor.Yellow => gc.fill = Color.Yellow
-        case PuyoColor.Gray => gc.fill = Color.Gray
-      }
+      gc.fill = getColor(yo)
       gc.fillOval(50 + cellSize * yo.x, 50 + cellSize * yo.y, cellSize, cellSize)
     }
+    for (yo <- board.next) {
+      gc.fill = getColor(yo)
+      gc.fillOval(5, 50 + cellSize * (yo.y + 1), cellSize, cellSize)
+    }
+  }
+
+  def getColor(yo: Yo): Color = yo.color match {
+    case PuyoColor.Red => Color.Red
+    case PuyoColor.Green => Color.Green
+    case PuyoColor.Blue => Color.Blue
+    case PuyoColor.Purple => Color.Purple
+    case PuyoColor.Yellow => Color.Yellow
+    case PuyoColor.Gray => Color.Gray
   }
 }

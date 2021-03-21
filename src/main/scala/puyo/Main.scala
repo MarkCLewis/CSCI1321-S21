@@ -18,11 +18,11 @@ import scalafx.scene.input.KeyCode
 // * Don't draw Puyo above the top
 // * Falls pieces
 // * Moving
-// Moving and falling at the right speed
-// Walls
-// Rotating
-// Stack
-// Things go away
+// * Moving and falling at the right speed
+// * Walls
+// * Rotating
+// * Stack
+// * Things go away
 
 object Main extends JFXApp {
   val canvas = new Canvas(1000, 800)
@@ -50,6 +50,8 @@ object Main extends JFXApp {
         ke.code match {
           case KeyCode.Left => board.leftPressed()
           case KeyCode.Right => board.rightPressed()
+          case KeyCode.Up => board.upPressed()
+          case KeyCode.Down => board.downPressed()
           case _ =>
         }
       }
@@ -57,6 +59,8 @@ object Main extends JFXApp {
         ke.code match {
           case KeyCode.Left => board.leftReleased()
           case KeyCode.Right => board.rightReleased()
+          case KeyCode.Up => board.upReleased()
+          case KeyCode.Down => board.downReleased()
           case _ =>
         }
       }

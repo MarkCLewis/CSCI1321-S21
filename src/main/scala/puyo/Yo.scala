@@ -5,5 +5,5 @@ trait Yo {
   def y: Int
   def color: PuyoColor.Value
 
-  def move(dx: Int, dy: Int): Yo
+  def move(dx: Int, dy: Int, isClear: (Int, Int) => Boolean): Yo
 }

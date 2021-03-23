@@ -3,8 +3,6 @@ package puyo
 import collection.mutable
 
 class Board {
-  val width = 6
-  val height = 12
   private var leftHeld = false
   private var rightHeld = false
   private var upHeld = false
@@ -33,6 +31,10 @@ class Board {
   def yos = _yos
   def allYos = dropping ::: yos
   def next = _next
+
+  def makePassable(): PassableBoard = {
+    PassableBoard(allYos.map(_.makePassable()), next.map(_.makePassable()))
+  }
 
   def update(delay: Double): Unit = {
     mode match {
@@ -109,7 +111,7 @@ class Board {
   }
 
   def checkRemove(): Boolean = {
-    val grid = Array.fill(width, height)(null: Yo)
+    val grid = Array.fill(Board.width, Board.height)(null: Yo)
     for (yo <- _yos) grid(yo.x)(yo.y) = yo
     def recurOnGrid(color: PuyoColor.Value, x: Int, y: Int, visited: mutable.Set[Yo]): Unit = {
       grid(x)(y) match {
@@ -120,8 +122,8 @@ class Board {
               (dx, dy) <- offsets
               nx = x + dx
               ny = y + dy
-              if nx >= 0 && nx < width && ny >= 0 && ny < height && !visited(grid(nx)(ny))
-            } yield recurOnGrid(color, nx, ny, visited)
+              if nx >= 0 && nx < Board.width && ny >= 0 && ny < Board.height && !visited(grid(nx)(ny))
+            } recurOnGrid(color, nx, ny, visited)
           }
         case noyo: Noyo =>
           visited += noyo
@@ -130,7 +132,7 @@ class Board {
     }
 
     val removed = mutable.Set[Yo]()
-    for (x <- 0 until width; y <- 0 until height; if grid(x)(y) != null && !removed(grid(x)(y))) {
+    for (x <- 0 until Board.width; y <- 0 until Board.height; if grid(x)(y) != null && !removed(grid(x)(y))) {
       val removeHere = mutable.Set[Yo]()
       val col = grid(x)(y).color
       recurOnGrid(col, x, y, removeHere)
@@ -141,7 +143,7 @@ class Board {
   }
 
   def isClear(x: Int, y: Int): Boolean = {
-    x >= 0 && x < width && y < height && _yos.forall(yo => yo.x != x || yo.y != y)
+    x >= 0 && x < Board.width && y < Board.height && _yos.forall(yo => yo.x != x || yo.y != y)
   }
 
   def leftPressed() = {
@@ -164,4 +166,9 @@ class Board {
   def rightReleased() = rightHeld = false
   def upReleased() = upHeld = false
   def downReleased() = downHeld = false
+}
+
+object Board {
+  val width = 6
+  val height = 12
 }

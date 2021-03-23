@@ -5,9 +5,9 @@ import scalafx.scene.paint.Color
 
 class Renderer(gc: GraphicsContext) {
   val cellSize = 40
-  def render(board: Board): Unit = {
+  def render(board: PassableBoard): Unit = {
     gc.fill = Color.Black
-    gc.fillRect(50, 50, cellSize * board.width, cellSize * board.height)
+    gc.fillRect(50, 50, cellSize * Board.width, cellSize * Board.height)
 
     for (yo <- board.allYos; if yo.y >= 0) {
       gc.fill = getColor(yo)
@@ -19,7 +19,7 @@ class Renderer(gc: GraphicsContext) {
     }
   }
 
-  def getColor(yo: Yo): Color = yo.color match {
+  def getColor(yo: PassableYo): Color = yo.color match {
     case PuyoColor.Red => Color.Red
     case PuyoColor.Green => Color.Green
     case PuyoColor.Blue => Color.Blue

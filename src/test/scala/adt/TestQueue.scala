@@ -4,7 +4,7 @@ import org.junit.Test
 import org.junit.Before
 import org.junit.Assert._
 
-class TestPriorityQueue {
+class TestQueue {
   var queue: ArrayQueue[Int] = null
 
   @Before def init = {

@@ -10,6 +10,7 @@ import java.net.Socket
 import java.io.ObjectInputStream
 import scala.concurrent.Future
 import scalafx.application.Platform
+import java.io.ObjectOutputStream
 
 object Client extends JFXApp {
   val canvas = new Canvas(1000, 800)
@@ -18,6 +19,7 @@ object Client extends JFXApp {
 
   val sock = new Socket("localhost", 8080)
   val ois = new ObjectInputStream(sock.getInputStream())
+  val oos = new ObjectOutputStream(sock.getOutputStream())
 
   implicit val ec: scala.concurrent.ExecutionContext = scala.concurrent.ExecutionContext.global
 
@@ -36,24 +38,26 @@ object Client extends JFXApp {
     scene = new Scene(1000, 800) {
       content += canvas
 
-      // onKeyPressed = (ke: KeyEvent) => {
-      //   ke.code match {
-      //     case KeyCode.Left => board.leftPressed()
-      //     case KeyCode.Right => board.rightPressed()
-      //     case KeyCode.Up => board.upPressed()
-      //     case KeyCode.Down => board.downPressed()
-      //     case _ =>
-      //   }
-      // }
-      // onKeyReleased = (ke: KeyEvent) => {
-      //   ke.code match {
-      //     case KeyCode.Left => board.leftReleased()
-      //     case KeyCode.Right => board.rightReleased()
-      //     case KeyCode.Up => board.upReleased()
-      //     case KeyCode.Down => board.downReleased()
-      //     case _ =>
-      //   }
-      // }
+      onKeyPressed = (ke: KeyEvent) => {
+        println("Key pressed" + ke)
+        ke.code match {
+          case KeyCode.Left => oos.writeInt(ControlKeys.Pressed); oos.writeInt(ControlKeys.Left); oos.flush()
+          case KeyCode.Right => oos.writeInt(ControlKeys.Pressed); oos.writeInt(ControlKeys.Right); oos.flush()
+          case KeyCode.Up => oos.writeInt(ControlKeys.Pressed); oos.writeInt(ControlKeys.Up); oos.flush()
+          case KeyCode.Down => oos.writeInt(ControlKeys.Pressed); oos.writeInt(ControlKeys.Down); oos.flush()
+          case _ =>
+        }
+      }
+      onKeyReleased = (ke: KeyEvent) => {
+        ke.code match {
+          case KeyCode.Left => oos.writeInt(ControlKeys.Released); oos.writeInt(ControlKeys.Left); oos.flush()
+          case KeyCode.Right => oos.writeInt(ControlKeys.Released); oos.writeInt(ControlKeys.Right); oos.flush()
+          case KeyCode.Up => oos.writeInt(ControlKeys.Released); oos.writeInt(ControlKeys.Up); oos.flush()
+          case KeyCode.Down => oos.writeInt(ControlKeys.Released); oos.writeInt(ControlKeys.Down); oos.flush()
+          case _ =>
+        }
+        oos.flush()
+      }
     }
   }
 }

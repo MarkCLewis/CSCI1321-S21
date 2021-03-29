@@ -5,10 +5,12 @@ import java.io.ObjectOutputStream
 import java.io.ObjectInputStream
 import java.net.Socket
 import scala.concurrent.Future
+import java.util.concurrent.LinkedBlockingQueue
 
 case class ConnectedClient(sock: Socket, ois: ObjectInputStream, oos: ObjectOutputStream, board: Board)
 
 object Server extends App {
+  private val clientQueue = new LinkedBlockingQueue[ConnectedClient]()
   private var clients = List[ConnectedClient]()
   implicit val ec: scala.concurrent.ExecutionContext = scala.concurrent.ExecutionContext.global
 
@@ -19,14 +21,24 @@ object Server extends App {
       val oos = new ObjectOutputStream(sock.getOutputStream())
       val ois = new ObjectInputStream(sock.getInputStream())
       val board = new Board()
-      clients ::= ConnectedClient(sock, ois, oos, board)
+      clientQueue.put(ConnectedClient(sock, ois, oos, board))
     }
   }
 
-  var lastTime = -1L
-  while(true) { 
+  val sendInterval = 0.03
+  private var sendDelay = 0.0
+  private var lastTime = -1L
+  while(true) {
+    while (!clientQueue.isEmpty()) {
+      val cc = clientQueue.take()
+      clients ::= cc
+    }
     val time = System.nanoTime()
     if (lastTime >= 0) {
+      val delay = (time - lastTime) / 1e9
+      sendDelay += delay
+      val sendBoards = sendDelay > sendInterval
+      if (sendBoards) sendDelay = 0.0
       for (ConnectedClient(sock, ois, oos, board) <- clients) {
         if (ois.available() > 0) {
           val pressRelease = ois.readInt()
@@ -50,9 +62,8 @@ object Server extends App {
             }
           }
         }
-        val delay = (time - lastTime) / 1e9
         board.update(delay)
-        oos.writeObject(board.makePassable())
+        if (sendBoards) oos.writeObject(board.makePassable())
       }
     }
     lastTime = time

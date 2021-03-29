@@ -39,7 +39,6 @@ object Client extends JFXApp {
       content += canvas
 
       onKeyPressed = (ke: KeyEvent) => {
-        println("Key pressed" + ke)
         ke.code match {
           case KeyCode.Left => oos.writeInt(ControlKeys.Pressed); oos.writeInt(ControlKeys.Left); oos.flush()
           case KeyCode.Right => oos.writeInt(ControlKeys.Pressed); oos.writeInt(ControlKeys.Right); oos.flush()

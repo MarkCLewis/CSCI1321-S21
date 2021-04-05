@@ -11,11 +11,18 @@ import java.io.ObjectInputStream
 import scala.concurrent.Future
 import scalafx.application.Platform
 import java.io.ObjectOutputStream
+import scalafx.scene.control.TextInputDialog
 
 object Client extends JFXApp {
   val canvas = new Canvas(1000, 800)
   val gc = canvas.graphicsContext2D
   val renderer = new Renderer(gc)
+
+  val dialog = new TextInputDialog("localhost")
+  dialog.contentText = "What machine is the server running on?"
+  dialog.title = "Server"
+  dialog.headerText = "Server Machine"
+  val serverMachine = dialog.showAndWait().getOrElse("localhost")
 
   val sock = new Socket("localhost", 8080)
   val ois = new ObjectInputStream(sock.getInputStream())

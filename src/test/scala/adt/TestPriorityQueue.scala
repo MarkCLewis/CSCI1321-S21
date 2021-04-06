@@ -4,11 +4,11 @@ import org.junit.Test
 import org.junit.Before
 import org.junit.Assert._
 
-class TestQueue {
-  var queue: MyQueue[Int] = null
+class TestPriorityQueue {
+  var queue: MyPriorityQueue[Int] = null
 
   @Before def init = {
-    queue = new LinkedQueue[Int]()
+    queue = new SortedArrayPQ0[Int](_ < _)
   }
 
   @Test def emptyOnCreate = {
@@ -28,12 +28,12 @@ class TestQueue {
     queue.enqueue(5)
     queue.enqueue(3)
     assertFalse(queue.isEmpty)
-    assertEquals(7, queue.peek)
-    assertEquals(7, queue.dequeue())
-    assertEquals(5, queue.peek)
-    assertEquals(5, queue.dequeue())
     assertEquals(3, queue.peek)
     assertEquals(3, queue.dequeue())
+    assertEquals(5, queue.peek)
+    assertEquals(5, queue.dequeue())
+    assertEquals(7, queue.peek)
+    assertEquals(7, queue.dequeue())
     assertTrue(queue.isEmpty)
   }
 
@@ -42,23 +42,23 @@ class TestQueue {
     queue.enqueue(5)
     queue.enqueue(3)
     assertFalse(queue.isEmpty)
-    assertEquals(7, queue.peek)
-    assertEquals(7, queue.dequeue())
-    assertEquals(5, queue.peek)
-    assertEquals(5, queue.dequeue())
     assertEquals(3, queue.peek)
     assertEquals(3, queue.dequeue())
+    assertEquals(5, queue.peek)
+    assertEquals(5, queue.dequeue())
+    assertEquals(7, queue.peek)
+    assertEquals(7, queue.dequeue())
     assertTrue(queue.isEmpty)
+    queue.enqueue(4)
     queue.enqueue(8)
     queue.enqueue(6)
-    queue.enqueue(4)
     assertFalse(queue.isEmpty)
-    assertEquals(8, queue.peek)
-    assertEquals(8, queue.dequeue())
-    assertEquals(6, queue.peek)
-    assertEquals(6, queue.dequeue())
     assertEquals(4, queue.peek)
     assertEquals(4, queue.dequeue())
+    assertEquals(6, queue.peek)
+    assertEquals(6, queue.dequeue())
+    assertEquals(8, queue.peek)
+    assertEquals(8, queue.dequeue())
     assertTrue(queue.isEmpty)
   }
 
@@ -66,7 +66,7 @@ class TestQueue {
     val nums = Array.fill(1000)(util.Random.nextInt())
     for (n <- nums) queue.enqueue(n)
     assertFalse(queue.isEmpty)
-    for (n <- nums) {
+    for (n <- nums.sorted) {
       assertEquals(n, queue.peek)
       assertEquals(n, queue.dequeue())
     }
@@ -77,14 +77,14 @@ class TestQueue {
     val nums = Array.fill(1000)(util.Random.nextInt())
     for (n <- nums) queue.enqueue(n)
     assertFalse(queue.isEmpty)
-    for (n <- nums) {
+    for (n <- nums.sorted) {
       assertEquals(n, queue.peek)
       assertEquals(n, queue.dequeue())
     }
     assertTrue(queue.isEmpty)
     for (n <- nums) queue.enqueue(n)
     assertFalse(queue.isEmpty)
-    for (n <- nums) {
+    for (n <- nums.sorted) {
       assertEquals(n, queue.peek)
       assertEquals(n, queue.dequeue())
     }

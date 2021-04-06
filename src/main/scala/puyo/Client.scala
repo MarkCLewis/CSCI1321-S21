@@ -24,7 +24,7 @@ object Client extends JFXApp {
   dialog.headerText = "Server Machine"
   val serverMachine = dialog.showAndWait().getOrElse("localhost")
 
-  val sock = new Socket("localhost", 8080)
+  val sock = new Socket(serverMachine, 8080)
   val ois = new ObjectInputStream(sock.getInputStream())
   val oos = new ObjectOutputStream(sock.getOutputStream())
 

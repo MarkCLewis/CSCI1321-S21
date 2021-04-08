@@ -1,5 +1,5 @@
 /* Alex M. Therwhanger, Derian M. Mowen, Asjal Ahmad */
-package adtar 
+package adt 
 
 class UnsortedListPQ2[A](higherPriority: (A, A) => Boolean) extends MyPriorityQueue[A] {
   private class Node(var data: A, var next: Node)
@@ -11,7 +11,6 @@ class UnsortedListPQ2[A](higherPriority: (A, A) => Boolean) extends MyPriorityQu
   def enqueue(a: A): Unit = {
     val x = new Node(a,null)
     tail = x
-    size++
   
   
   }
@@ -24,31 +23,28 @@ class UnsortedListPQ2[A](higherPriority: (A, A) => Boolean) extends MyPriorityQu
   * */
   def dequeue(): A = {
     val highestNode = findHighestQueue()
-    
-    if(head==null)  null
-    else if (size == 1) head.data
-    else {
-      retNode.data
-      size--
-    }
+    // Problem removing in singly lnked list.
+    highestNode.data
   }
 
 
 
   
   //O(1)
-  def peek: A = findHighestQueue.data()
+  def peek: A = findHighestQueue().data
 
   //O(1)
-  def isEmpty:Boolean = end.next == end
+  def isEmpty:Boolean = head == null
 
 
   private def findHighestQueue():Node = {
-    val d:Node = null
-    for(i <- front until end){
-      d = higherPriority(i,i.next)
+    var d:Node = head
+    var highest: Node = null
+    while(d != null) {
+      if(highest==null || higherPriority(d.data,highest.data)) highest = d
+      d = d.next
     }
-    return d
+    return highest
   }
 }
 

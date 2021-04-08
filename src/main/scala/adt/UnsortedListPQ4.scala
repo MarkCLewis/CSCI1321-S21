@@ -8,18 +8,27 @@ class UnsortedListPQ4[A](higherPriority: (A, A) => Boolean) extends MyPriorityQu
   end.next = end
   end.prev = end
   def enqueue(a: A): Unit = {
-    //Same as in videos?
+    val n = new Node(a, end, end.next)
+    end.next.prev = n
+    end.next = n
   }
   def dequeue(): A = {
-    //Check priority as we dequeue
+    val n = findHigh()
+    n.prev.next = n.next
+    n.next.prev = n.prev
+    n.data
   }
-  def peek: A = ???
-  private def findHigh(a: Node): Node = {
-    var a = end.next
-    var b = a.next
-    while(a != end){
-      
-    }  
+  def peek: A = findHigh().data
+
+  private def findHigh(): Node = {
+    var rover = end.next
+    var highest = rover
+    rover = rover.next
+    while(rover != end){
+      if (higherPriority(rover.data, highest.data)) highest = rover
+      rover = rover.next
+    }
+    highest
   }
   
   def isEmpty:Boolean = end.next == end

@@ -5,17 +5,22 @@ import scalafx.scene.paint.Color
 
 class Renderer(gc: GraphicsContext) {
   val cellSize = 40
+  val leftOffset = 50
+  val topOffset = 50
+  val nextLeftOffset = 5
+  val nextTopOffset = 50
+  
   def render(board: PassableBoard): Unit = {
     gc.fill = Color.Black
-    gc.fillRect(50, 50, cellSize * Board.width, cellSize * Board.height)
+    gc.fillRect(leftOffset, topOffset, cellSize * Board.width, cellSize * Board.height)
 
     for (yo <- board.allYos; if yo.y >= 0) {
       gc.fill = getColor(yo)
-      gc.fillOval(50 + cellSize * yo.x, 50 + cellSize * yo.y, cellSize, cellSize)
+      gc.fillOval(leftOffset + cellSize * yo.x, topOffset + cellSize * yo.y, cellSize, cellSize)
     }
     for (yo <- board.next) {
       gc.fill = getColor(yo)
-      gc.fillOval(5, 50 + cellSize * (yo.y + 1), cellSize, cellSize)
+      gc.fillOval(nextLeftOffset, nextTopOffset + cellSize * (yo.y + 1), cellSize, cellSize)
     }
   }
 

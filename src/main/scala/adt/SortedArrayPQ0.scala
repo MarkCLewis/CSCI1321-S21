@@ -2,37 +2,36 @@
 
 package adt
 
+import scala.reflect.ClassTag
+
 //smallest elements in the back
 //dequeue the biggest element 
 //biggest element in the front
 
-class SortedArrayPQ0[A](higherPriority: (A, A) => Boolean) extends MyPriorityQueue[A] {
-private var front, back = 0
-  var arr = new Array[A](10)
+class SortedArrayPQ0[A : ClassTag](higherPriority: (A, A) => Boolean) extends MyPriorityQueue[A] {
+  private var back = 0
+  var data = new Array[A](10)
   
-  def enqueue(a: A) = {
-    var index:Int = 0;
-    while (i in 0 until arr.length) {
-      if (higherPriority(a, arr(i))) index = i;
-    }
-  }
   def enqueue(a: A): Unit = {
-    if ((back + 1) % data.length == front) {
+    if (back + 1 >= data.length) {
       val tmp = new Array[A](data.length * 2)
-      for(i <- 0 until data.length - 1) tmp(i) = data((i + front) % data.length)
-      front = 0
-      back = data.length - 1
+      for(i <- 0 until data.length) tmp(i) = data(i)
       data = tmp 
     }
-    data(back) = obj
-    back = (back + 1) % data.length
+    var index:Int = back - 1;
+    while (index >= 0 && higherPriority(data(index), a)) {
+      data(index + 1) = data(index)
+      index -= 1;
+    }
+    data(index + 1) = a
+    back += 1
   }
   def dequeue(): A = {
-    asert(!isEmpty, "Dequeue called on an empty Queue.")
-    val ret = data(front)
-    front = (front+1) % data.length
+    assert(!isEmpty, "Dequeue called on an empty Queue.")
+    val ret = data(back-1)
+    back -= 1
     ret
   }
-  def peek: A = arr(front)
-  def isEmpty:Boolean = front == back
+  def peek: A = data(back-1)
+  def isEmpty:Boolean = back == 0
 }

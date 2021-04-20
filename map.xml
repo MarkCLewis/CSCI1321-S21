@@ -4,6 +4,7 @@
     <exits>-1,Hallway,-1,-1,-1,-1</exits>
     <item name="Chair">Something that you sit on.</item>
     <item name="Computer">The most powerful device in the Universe!</item>
+    <npc name="Pat" speed="5" damage="10">Don't mess with Pat.</npc>
   </room>
   <room keyword="Hallway" name="Hallway">
     <description>A long room that connects other rooms.</description>

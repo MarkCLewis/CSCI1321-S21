@@ -17,7 +17,9 @@ object Client extends App {
   implicit val ec: scala.concurrent.ExecutionContext = scala.concurrent.ExecutionContext.global
   Future {
     while (true) {
-      println(in.readLine())
+      val input = in.readLine()
+      if (input == null) sys.exit()
+      println(input)
     }
   }
   while (true) {

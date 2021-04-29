@@ -6,7 +6,44 @@ class BSTMap[K, V](lt: (K, K) => Boolean) extends mutable.Map[K, V] {
   private class Node(val key: K, var value: V, var left: Node, var right: Node)
   private var root: Node = null
 
-  def -=(key: K) = ???
+  def -=(key: K) = {
+    def findVictim(n: Node): Node = {
+      if (n == null) n
+      else if (n.key == key) {
+        if (n.left == null) n.right
+        else if (n.right == null) n.left
+        else {
+          val (link, max) = findRemoveMax(n.left)
+          max.right = n.right
+          max.left = link
+          max
+        }
+      } else if (lt(key, n.key)) {
+        n.left = findVictim(n.left)
+        n
+      } else {
+        n.right = findVictim(n.right)
+        n
+      }
+    }
+
+    /**
+      * Returns a tuple of the node to link to and the max ndoe that was found.
+      * Should never be called with null.
+      */
+    def findRemoveMax(n: Node): (Node, Node) = {
+      if (n.right == null) {
+        n.left -> n
+      } else {
+        val (link, max) = findRemoveMax(n.right)
+        n.right = link
+        (n, max)
+      }
+    }
+
+    root = findVictim(root)
+    this
+  }
 
   def +=(kv: (K, V)) = {
     def helper(n: Node): Node = {
@@ -44,8 +81,13 @@ class BSTMap[K, V](lt: (K, K) => Boolean) extends mutable.Map[K, V] {
         pushAllLeft(n.left)
       }
     }
-    def hasNext: Boolean = ???
-    def next(): (K, V) = ???
+    pushAllLeft(root)
+    def hasNext: Boolean = stack.nonEmpty
+    def next(): (K, V) = {
+      val ret = stack.pop()
+      pushAllLeft(ret.right)
+      ret.key -> ret.value
+    }
   }
 
   def preorder(visit: (K, V) => Unit): Unit = {

@@ -28,7 +28,7 @@ class BSTMap[K, V](lt: (K, K) => Boolean) extends mutable.Map[K, V] {
     }
 
     /**
-      * Returns a tuple of the node to link to and the max ndoe that was found.
+      * Returns a tuple of the node to link to and the max node that was found.
       * Should never be called with null.
       */
     def findRemoveMax(n: Node): (Node, Node) = {
@@ -37,7 +37,7 @@ class BSTMap[K, V](lt: (K, K) => Boolean) extends mutable.Map[K, V] {
       } else {
         val (link, max) = findRemoveMax(n.right)
         n.right = link
-        (n, max)
+        n -> max
       }
     }
 

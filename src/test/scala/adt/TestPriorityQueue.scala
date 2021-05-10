@@ -8,7 +8,7 @@ class TestPriorityQueue {
   var queue: MyPriorityQueue[Int] = null
 
   @Before def init = {
-    queue = new UnsortedListPQ4[Int](_ < _)
+    queue = new BinaryHeap[Int](_ < _)
   }
 
   @Test def emptyOnCreate = {
